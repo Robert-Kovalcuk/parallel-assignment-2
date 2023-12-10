@@ -1,12 +1,17 @@
-cmake_minimum_required(VERSION 3.27)
+cmake_minimum_required(VERSION 3.26.4)
 project(parallel_assignment_2)
 
 set(CMAKE_CXX_STANDARD 14)
 
 # Add MPI Package to Project
-find_package(MPI REQUIRED)
+# find_package(MPI REQUIRED)
 
-add_executable(parallel_assignment_2 parallel-assignment-2.cpp)
+add_executable(parallel_assignment_2 main.c
+        common/fileLoadUtils.h
+        common/fileLoadUtils.c
+        solutions/c/mainC.c
+        solutions/b/mainB.c
+        solutions/a/mainA.c)
 
 # Add libraries for code completion and compiling
-target_link_libraries(parallel_assignment_2 PUBLIC MPI::MPI_CXX)
+#target_link_libraries(parallel_assignment_2 PUBLIC MPI::MPI_CXX)

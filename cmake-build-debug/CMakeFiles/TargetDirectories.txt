@@ -1,0 +1,3 @@
+C:/Users/bobok/CLionProjects/parallel-assignment-2/cmake-build-debug/CMakeFiles/parallel_assignment_2.dir
+C:/Users/bobok/CLionProjects/parallel-assignment-2/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/bobok/CLionProjects/parallel-assignment-2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
