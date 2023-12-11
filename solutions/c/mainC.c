@@ -11,7 +11,7 @@
 
 
 int main() {
-    MPI_Init(NULL, NULL); // Initialize MPI
+    MPI_Init(NULL, NULL);
 
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -33,7 +33,6 @@ int main() {
         len = WIDTH * HEIGHT * DEPTH;
     }
 
-    // Broadcast the length of the voxel data to all processes
     MPI_Bcast(&len, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
     int start = rank * len / size;
