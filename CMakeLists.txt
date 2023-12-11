@@ -9,9 +9,12 @@ set(CMAKE_CXX_STANDARD 14)
 add_executable(parallel_assignment_2 main.c
         common/fileLoadUtils.h
         common/fileLoadUtils.c
-        solutions/c/mainC.c
-        solutions/b/mainB.c
-        solutions/a/mainA.c)
+        )
+
+add_executable(mainC
+        common/fileLoadUtils.h
+        common/fileLoadUtils.c
+        solutions/c/mainC.c)
 
 # Add libraries for code completion and compiling
 #target_link_libraries(parallel_assignment_2 PUBLIC MPI::MPI_CXX)

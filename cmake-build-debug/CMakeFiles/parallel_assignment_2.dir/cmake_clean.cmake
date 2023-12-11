@@ -1,17 +1,9 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.obj"
-  "CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.obj.d"
-  "CMakeFiles/parallel_assignment_2.dir/main.c.obj"
-  "CMakeFiles/parallel_assignment_2.dir/main.c.obj.d"
-  "CMakeFiles/parallel_assignment_2.dir/solutions/a/mainA.c.obj"
-  "CMakeFiles/parallel_assignment_2.dir/solutions/a/mainA.c.obj.d"
-  "CMakeFiles/parallel_assignment_2.dir/solutions/b/mainB.c.obj"
-  "CMakeFiles/parallel_assignment_2.dir/solutions/b/mainB.c.obj.d"
-  "CMakeFiles/parallel_assignment_2.dir/solutions/c/mainC.c.obj"
-  "CMakeFiles/parallel_assignment_2.dir/solutions/c/mainC.c.obj.d"
-  "libparallel_assignment_2.dll.a"
-  "parallel_assignment_2.exe"
-  "parallel_assignment_2.exe.manifest"
+  "CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.o"
+  "CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.o.d"
+  "CMakeFiles/parallel_assignment_2.dir/main.c.o"
+  "CMakeFiles/parallel_assignment_2.dir/main.c.o.d"
+  "parallel_assignment_2"
   "parallel_assignment_2.pdb"
 )
 
