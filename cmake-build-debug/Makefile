@@ -142,6 +142,19 @@ mainC/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainC.dir/build.make CMakeFiles/mainC.dir/build
 .PHONY : mainC/fast
 
+#=============================================================================
+# Target rules for targets named mainB
+
+# Build rule for target.
+mainB: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 mainB
+.PHONY : mainB
+
+# fast build rule for target.
+mainB/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainB.dir/build.make CMakeFiles/mainB.dir/build
+.PHONY : mainB/fast
+
 common/fileLoadUtils.o: common/fileLoadUtils.c.o
 .PHONY : common/fileLoadUtils.o
 
@@ -149,6 +162,7 @@ common/fileLoadUtils.o: common/fileLoadUtils.c.o
 common/fileLoadUtils.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/parallel_assignment_2.dir/build.make CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.o
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainC.dir/build.make CMakeFiles/mainC.dir/common/fileLoadUtils.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainB.dir/build.make CMakeFiles/mainB.dir/common/fileLoadUtils.c.o
 .PHONY : common/fileLoadUtils.c.o
 
 common/fileLoadUtils.i: common/fileLoadUtils.c.i
@@ -158,6 +172,7 @@ common/fileLoadUtils.i: common/fileLoadUtils.c.i
 common/fileLoadUtils.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/parallel_assignment_2.dir/build.make CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainC.dir/build.make CMakeFiles/mainC.dir/common/fileLoadUtils.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainB.dir/build.make CMakeFiles/mainB.dir/common/fileLoadUtils.c.i
 .PHONY : common/fileLoadUtils.c.i
 
 common/fileLoadUtils.s: common/fileLoadUtils.c.s
@@ -167,6 +182,7 @@ common/fileLoadUtils.s: common/fileLoadUtils.c.s
 common/fileLoadUtils.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/parallel_assignment_2.dir/build.make CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainC.dir/build.make CMakeFiles/mainC.dir/common/fileLoadUtils.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainB.dir/build.make CMakeFiles/mainB.dir/common/fileLoadUtils.c.s
 .PHONY : common/fileLoadUtils.c.s
 
 main.o: main.c.o
@@ -192,6 +208,30 @@ main.s: main.c.s
 main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/parallel_assignment_2.dir/build.make CMakeFiles/parallel_assignment_2.dir/main.c.s
 .PHONY : main.c.s
+
+solutions/b/mainB.o: solutions/b/mainB.c.o
+.PHONY : solutions/b/mainB.o
+
+# target to build an object file
+solutions/b/mainB.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainB.dir/build.make CMakeFiles/mainB.dir/solutions/b/mainB.c.o
+.PHONY : solutions/b/mainB.c.o
+
+solutions/b/mainB.i: solutions/b/mainB.c.i
+.PHONY : solutions/b/mainB.i
+
+# target to preprocess a source file
+solutions/b/mainB.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainB.dir/build.make CMakeFiles/mainB.dir/solutions/b/mainB.c.i
+.PHONY : solutions/b/mainB.c.i
+
+solutions/b/mainB.s: solutions/b/mainB.c.s
+.PHONY : solutions/b/mainB.s
+
+# target to generate assembly for a file
+solutions/b/mainB.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainB.dir/build.make CMakeFiles/mainB.dir/solutions/b/mainB.c.s
+.PHONY : solutions/b/mainB.c.s
 
 solutions/c/mainC.o: solutions/c/mainC.c.o
 .PHONY : solutions/c/mainC.o
@@ -225,6 +265,7 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... mainB"
 	@echo "... mainC"
 	@echo "... parallel_assignment_2"
 	@echo "... common/fileLoadUtils.o"
@@ -233,6 +274,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... solutions/b/mainB.o"
+	@echo "... solutions/b/mainB.i"
+	@echo "... solutions/b/mainB.s"
 	@echo "... solutions/c/mainC.o"
 	@echo "... solutions/c/mainC.i"
 	@echo "... solutions/c/mainC.s"

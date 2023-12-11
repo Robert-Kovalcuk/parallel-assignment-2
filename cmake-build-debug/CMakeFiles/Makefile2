@@ -65,6 +65,7 @@ CMAKE_BINARY_DIR = /home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug
 # The main recursive "all" target.
 all: CMakeFiles/parallel_assignment_2.dir/all
 all: CMakeFiles/mainC.dir/all
+all: CMakeFiles/mainB.dir/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
@@ -74,6 +75,7 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/parallel_assignment_2.dir/clean
 clean: CMakeFiles/mainC.dir/clean
+clean: CMakeFiles/mainB.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -83,7 +85,7 @@ clean: CMakeFiles/mainC.dir/clean
 CMakeFiles/parallel_assignment_2.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/parallel_assignment_2.dir/build.make CMakeFiles/parallel_assignment_2.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/parallel_assignment_2.dir/build.make CMakeFiles/parallel_assignment_2.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles --progress-num=4,5,6 "Built target parallel_assignment_2"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles --progress-num=7,8,9 "Built target parallel_assignment_2"
 .PHONY : CMakeFiles/parallel_assignment_2.dir/all
 
 # Build rule for subdir invocation for target.
@@ -109,7 +111,7 @@ CMakeFiles/parallel_assignment_2.dir/clean:
 CMakeFiles/mainC.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainC.dir/build.make CMakeFiles/mainC.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainC.dir/build.make CMakeFiles/mainC.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target mainC"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles --progress-num=4,5,6 "Built target mainC"
 .PHONY : CMakeFiles/mainC.dir/all
 
 # Build rule for subdir invocation for target.
@@ -127,6 +129,32 @@ mainC: CMakeFiles/mainC.dir/rule
 CMakeFiles/mainC.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainC.dir/build.make CMakeFiles/mainC.dir/clean
 .PHONY : CMakeFiles/mainC.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/mainB.dir
+
+# All Build rule for target.
+CMakeFiles/mainB.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainB.dir/build.make CMakeFiles/mainB.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainB.dir/build.make CMakeFiles/mainB.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles --progress-num=1,2,3 "Built target mainB"
+.PHONY : CMakeFiles/mainB.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/mainB.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles 3
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/mainB.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles 0
+.PHONY : CMakeFiles/mainB.dir/rule
+
+# Convenience name for target.
+mainB: CMakeFiles/mainB.dir/rule
+.PHONY : mainB
+
+# clean rule for target.
+CMakeFiles/mainB.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/mainB.dir/build.make CMakeFiles/mainB.dir/clean
+.PHONY : CMakeFiles/mainB.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

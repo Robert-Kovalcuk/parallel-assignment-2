@@ -72,7 +72,7 @@ void *processBlock(void *threadArgs) {
 
 int main() {
     FILE *file;
-    char *filename = "c8.raw";
+    char *filename = "/home/eddie/TUKE/PP/parallel-assignment-2/c8.raw";
 
     // Otvorenie súboru na čítanie binárnych dát
     file = fopen(filename, "rb");

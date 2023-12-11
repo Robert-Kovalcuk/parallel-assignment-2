@@ -105,6 +105,50 @@
 					<DistClean command="/usr/bin/gmake -j12 -f &quot;/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="mainB">
+				<Option output="/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/mainB" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/13"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/13"/>
+					<Add directory="/usr/include/c++/13/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/13/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j12 -f &quot;/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/Makefile&quot;  VERBOSE=1 mainB"/>
+					<CompileFile command="/usr/bin/gmake -j12 -f &quot;/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j12 -f &quot;/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j12 -f &quot;/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mainB/fast">
+				<Option output="/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/mainB" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/13"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/13"/>
+					<Add directory="/usr/include/c++/13/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/13/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j12 -f &quot;/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/Makefile&quot;  VERBOSE=1 mainB/fast"/>
+					<CompileFile command="/usr/bin/gmake -j12 -f &quot;/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j12 -f &quot;/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j12 -f &quot;/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="edit_cache">
 				<Option working_dir="/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug"/>
 				<Option type="4"/>
@@ -129,13 +173,18 @@
 		<Unit filename="/home/eddie/TUKE/PP/parallel-assignment-2/common/fileLoadUtils.c">
 			<Option target="parallel_assignment_2"/>
 			<Option target="mainC"/>
+			<Option target="mainB"/>
 		</Unit>
 		<Unit filename="/home/eddie/TUKE/PP/parallel-assignment-2/common/fileLoadUtils.h">
 			<Option target="parallel_assignment_2"/>
 			<Option target="mainC"/>
+			<Option target="mainB"/>
 		</Unit>
 		<Unit filename="/home/eddie/TUKE/PP/parallel-assignment-2/main.c">
 			<Option target="parallel_assignment_2"/>
+		</Unit>
+		<Unit filename="/home/eddie/TUKE/PP/parallel-assignment-2/solutions/b/mainB.c">
+			<Option target="mainB"/>
 		</Unit>
 		<Unit filename="/home/eddie/TUKE/PP/parallel-assignment-2/solutions/c/mainC.c">
 			<Option target="mainC"/>

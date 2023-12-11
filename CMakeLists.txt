@@ -16,5 +16,10 @@ add_executable(mainC
         common/fileLoadUtils.c
         solutions/c/mainC.c)
 
+add_executable(mainB
+        common/fileLoadUtils.h
+        common/fileLoadUtils.c
+        solutions/b/mainB.c)
+
 # Add libraries for code completion and compiling
 #target_link_libraries(parallel_assignment_2 PUBLIC MPI::MPI_CXX)

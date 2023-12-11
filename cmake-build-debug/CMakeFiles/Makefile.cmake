@@ -49,4 +49,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/parallel_assignment_2.dir/DependInfo.cmake"
   "CMakeFiles/mainC.dir/DependInfo.cmake"
+  "CMakeFiles/mainB.dir/DependInfo.cmake"
   )

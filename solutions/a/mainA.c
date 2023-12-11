@@ -17,27 +17,34 @@ int main() {
     gettimeofday(&start_time, NULL);
 
     bool flip = 0;
-    int byteCount = 1;
+    int totalByteCount = 1;
 
     if (voxels[0] <= THRESHOLD) {
         flip = 0;
     }
 
-    for (int i = 0; i < len; i++) {
-        if (voxels[i] > THRESHOLD && !flip) {
-            byteCount++;
-            flip = 1;
+    for (int i = 0; i < len/1024; ++i) {
+        int byteCount = 1;
+
+        for (int j = i*1024; j < (i*1024)+1024; j++) {
+
+            if (voxels[j] > THRESHOLD && !flip) {
+                byteCount++;
+                flip = 1;
+            }
+
+            if (voxels[j] <= THRESHOLD && flip) {
+                byteCount++;
+                flip = 0;
+            }
         }
 
-        if (voxels[i] <= THRESHOLD && flip) {
-            byteCount++;
-            flip = 0;
-        }
+        totalByteCount += byteCount;
     }
 
     gettimeofday(&end_time, NULL);
 
-    printf("Total byte count: %d\n", byteCount);
+    printf("Total byte count: %d\n", totalByteCount);
 
     long elapsed = (end_time.tv_sec - start_time.tv_sec) * 1000000 + end_time.tv_usec - start_time.tv_usec;
     printf("Time elapsed: %ld ms\n", elapsed / 1000);
