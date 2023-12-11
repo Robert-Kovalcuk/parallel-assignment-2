@@ -1,132 +1,125 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <pthread.h>
-#include <sys/time.h>
-#include "../../common/fileLoadUtils.h"
+#include <stdint.h>
 
+#define X_DIM 1024
+#define Y_DIM 1024
+#define Z_DIM 314
 #define THRESHOLD 25
 #define BLOCK_SIZE 1024
-#define NUM_THREADS 4
+#define NUM_THREADS 16
 
-typedef struct {
-    unsigned char value;
-} Voxel;
+uint8_t filedata[X_DIM * Y_DIM * Z_DIM];
+pthread_t threads[NUM_THREADS];
+pthread_mutex_t totalCompressedSizeLock = PTHREAD_MUTEX_INITIALIZER;
+int totalCompressedSize = 0;
 
-typedef struct {
-    unsigned char *metadata;
-} MetadataBlock;
-
-typedef struct {
+// Štruktúra pre predávanie argumentov vláknu
+struct ThreadArgs {
     int start;
     int end;
-    Voxel ***data;
-    MetadataBlock *metadataBlock;
-} ThreadData;
+};
 
-void applyThresholdPartial(Voxel ***data, MetadataBlock *metadata, int start, int end) {
-    for (int z = 0; z < DEPTH; z++) {
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = start; x < end; x++) {
-                if (data[x][y][z].value > THRESHOLD) {
-                    metadata->metadata[x + y * WIDTH + z * WIDTH * HEIGHT] = 1;
-                } else {
-                    metadata->metadata[x + y * WIDTH + z * WIDTH * HEIGHT] = 0;
-                }
-            }
-        }
-    }
-}
-
-void *threadFunction(void *arg) {
-    ThreadData *threadData = (ThreadData *)arg;
-    applyThresholdPartial(threadData->data, threadData->metadataBlock, threadData->start, threadData->end);
-    pthread_exit(NULL);
-    return NULL;
-}
-
-int calculateCompressedSize(const unsigned char *metadata, int start, int end) {
+// Funkcia na kompresiu bit-level Run-Length Encoding
+int compressRLE(const uint8_t *data, int dataSize, uint8_t *compressedData) {
     int compressedSize = 0;
     int count = 1;
 
-    for (int i = start + 1; i < end; i++) {
-        if (metadata[i] == metadata[i - 1]) {
+    for (int i = 1; i < dataSize; i++) {
+        if (data[i] == data[i - 1]) {
             count++;
         } else {
-            compressedSize += 2;
+            // Zapisuje sa hodnota bitu a počet opakovaní do 8 bitov
+            compressedData[compressedSize++] = (data[i - 1] << 7) | (count & 0x7F);
             count = 1;
         }
     }
 
-    compressedSize += 2;
+    // Spracovanie poslednej sekvencie
+    compressedData[compressedSize++] = (data[dataSize - 1] << 7) | (count & 0x7F);
 
     return compressedSize;
 }
 
-int main() {
-    struct timeval start_time, end_time;
-    gettimeofday(&start_time, NULL);
+// Funkcia vykonávaná v každom vlákne
+void *processBlock(void *threadArgs) {
+    struct ThreadArgs *args = (struct ThreadArgs *)threadArgs;
+    int start = args->start;
+    int end = args->end;
 
-    FILE *file = fopen("c8.raw", "rb");
-    if (file == NULL) {
-        fprintf(stderr, "Error opening file.\n");
-        return 1;
-    }
+    for (int z = 0; z < Z_DIM; z++) {
+        for (int y = 0; y < Y_DIM; y++) {
+            for (int x = start; x < end; x += BLOCK_SIZE) {
 
-    Voxel ***data = (Voxel ***)malloc(WIDTH * sizeof(Voxel **));
-    for (int x = 0; x < WIDTH; x++) {
-        data[x] = (Voxel **)malloc(HEIGHT * sizeof(Voxel *));
-        for (int y = 0; y < HEIGHT; y++) {
-            data[x][y] = (Voxel *)malloc(DEPTH * sizeof(Voxel));
+                // Skopírovanie metadát do pomocného poľa
+                uint8_t compressedMetadata[BLOCK_SIZE];
+                for (int i = 0; i < BLOCK_SIZE; i++) {
+                    compressedMetadata[i] = filedata[x+y+z];
+                }
+
+                // Kompresia metadát pomocou bit-level RLE
+                int compressedSize = compressRLE(compressedMetadata, BLOCK_SIZE, compressedMetadata);
+
+                // Aktualizácia celkovej veľkosti komprimovaných dát
+                pthread_mutex_lock(&totalCompressedSizeLock);
+                totalCompressedSize += compressedSize;
+                pthread_mutex_unlock(&totalCompressedSizeLock);
+            }
         }
     }
 
-    fread(data[0][0], sizeof(Voxel), WIDTH * HEIGHT * DEPTH, file);
+    pthread_exit(NULL);
 
+    return NULL;
+}
+
+int main() {
+    FILE *file;
+    char *filename = "c8.raw";
+
+    // Otvorenie súboru na čítanie binárnych dát
+    file = fopen(filename, "rb");
+    if (file == NULL) {
+        fprintf(stderr, "Nepodarilo sa otvoriť súbor %s\n", filename);
+        exit(1);
+    }
+
+    // Načítanie dát zo súboru
+    for (int z = 0; z < Z_DIM; z++) {
+        for (int y = 0; y < Y_DIM; y++) {
+            for (int x = 0; x < X_DIM; x++) {
+                uint8_t tmp;
+                fread(&tmp, sizeof(uint8_t), 1, file);
+                // Aplikácia prahovania
+                filedata[x+y+z] = (tmp > THRESHOLD) ? 1 : 0;
+            }
+        }
+    }
+
+    // Zatvorenie súboru
     fclose(file);
 
-    MetadataBlock metadataBlock;
-    metadataBlock.metadata = (unsigned char *)malloc(WIDTH * HEIGHT * DEPTH * sizeof(unsigned char));
-    memset(metadataBlock.metadata, 0, WIDTH * HEIGHT * DEPTH);
+    // Inicializácia a spustenie vlákien
+    struct ThreadArgs threadArgs[NUM_THREADS];
 
-    pthread_t threads[NUM_THREADS];
-    ThreadData threadData[NUM_THREADS];
+    int j = 0;
 
-    int blockSize = WIDTH / NUM_THREADS;
-    for (int i = 0; i < NUM_THREADS; i++) {
-        threadData[i].start = i * blockSize;
-        threadData[i].end = (i == NUM_THREADS - 1) ? WIDTH : (i + 1) * blockSize;
-        threadData[i].data = data;
-        threadData[i].metadataBlock = &metadataBlock;
-
-        pthread_create(&threads[i], NULL, threadFunction, (void *)&threadData[i]);
-    }
-
-    for (int i = 0; i < NUM_THREADS; i++) {
-        pthread_join(threads[i], NULL);
-    }
-
-    int totalCompressedSize = 0;
-    for (int i = 0; i < WIDTH; i += BLOCK_SIZE) {
-        int blockEnd = (i + BLOCK_SIZE > WIDTH) ? WIDTH : i + BLOCK_SIZE;
-        int compressedSize = calculateCompressedSize(metadataBlock.metadata, i, blockEnd);
-        totalCompressedSize += compressedSize;
-    }
-
-    printf("Total compressed size: %d bytes\n", totalCompressedSize);
-
-    for (int x = 0; x < WIDTH; x++) {
-        for (int y = 0; y < HEIGHT; y++) {
-            free(data[x][y]);
+    while(j < X_DIM * Y_DIM * Z_DIM) {
+        for (int i = 0; i < NUM_THREADS; i++) {
+            threadArgs[i].start = i * BLOCK_SIZE;
+            threadArgs[i].end = (i + 1) * BLOCK_SIZE;
+            pthread_create(&threads[i], NULL, processBlock, (void *)&threadArgs[i]);
+            j = j + BLOCK_SIZE;
         }
-        free(data[x]);
-    }
-    free(data);
-    free(metadataBlock.metadata);
 
-    gettimeofday(&end_time, NULL);
-    long elapsed = (end_time.tv_sec - start_time.tv_sec) * 1000000 + end_time.tv_usec - start_time.tv_usec;
-    printf("Time elapsed: %ld microseconds\n", elapsed);
+        // Čakanie na ukončenie všetkých vlákien
+        for (int i = 0; i < NUM_THREADS; i++) {
+            pthread_join(threads[i], NULL);
+        }
+    }
+
+    printf("Celkova velkost komprimovanych dat pre vsetky datove bloky je %d bajtov\n", totalCompressedSize);
 
     return 0;
 }
