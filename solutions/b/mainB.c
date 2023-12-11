@@ -1,112 +1,77 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <stdint.h>
+#include <stdbool.h>
+#include <pthread.h>
+#include <sys/time.h>
+#include "C:\Users\bobok\CLionProjects\parallel-assignment-2.v2\common\fileLoadUtils.h"
 
-#define X_DIM 1024
-#define Y_DIM 1024
-#define Z_DIM 314
 #define THRESHOLD 25
-#define BLOCK_SIZE 1024
-#define NUM_THREADS 16
+#define NUM_THREADS 3
 
-uint8_t filedata[X_DIM * Y_DIM * Z_DIM];
-pthread_t threads[NUM_THREADS];
-pthread_mutex_t totalCompressedSizeLock = PTHREAD_MUTEX_INITIALIZER;
-int totalCompressedSize = 0;
-
-// Štruktúra pre predávanie argumentov vláknu
-struct ThreadArgs {
+struct ThreadData {
+    uint8_t *voxels;
     int start;
     int end;
 };
 
-// Funkcia na kompresiu bit-level Run-Length Encoding
-int compressRLE(const uint8_t *data, int dataSize, uint8_t *compressedData) {
-    int compressedSize = 0;
-    int count = 1;
+void *processSubset(void *arg) {
+    struct ThreadData *data = (struct ThreadData *) arg;
+    int byteCount = 1;
+    bool flip = 0;
 
-    for (int i = 1; i < dataSize; i++) {
-        if (data[i] == data[i - 1]) {
-            count++;
-        } else {
-            // Zapisuje sa hodnota bitu a počet opakovaní do 8 bitov
-            compressedData[compressedSize++] = (data[i - 1] << 7) | (count & 0x7F);
-            count = 1;
+    for (int j = data->start; j < data->end; j++) {
+        if (data->voxels[j] > THRESHOLD && !flip) {
+            byteCount++;
+            flip = 1;
+        }
+
+        if (data->voxels[j] <= THRESHOLD && flip) {
+            byteCount++;
+            flip = 0;
         }
     }
 
-    // Spracovanie poslednej sekvencie
-    compressedData[compressedSize++] = (data[dataSize - 1] << 7) | (count & 0x7F);
-
-    return compressedSize;
-}
-
-// Funkcia vykonávaná v každom vlákne
-void *processBlock(void *threadArgs) {
-    struct ThreadArgs *args = (struct ThreadArgs *)threadArgs;
-    int start = args->start;
-    int end = args->end;
-
-    for (int x = start; x < end; x += BLOCK_SIZE) {
-
-        // Skopírovanie metadát do pomocného poľa
-        uint8_t compressedMetadata[BLOCK_SIZE];
-        for (int i = 0; i < BLOCK_SIZE; i++) {
-            compressedMetadata[i] = filedata[x];
-        }
-
-        // Kompresia metadát pomocou bit-level RLE
-        int compressedSize = compressRLE(compressedMetadata, BLOCK_SIZE, compressedMetadata);
-
-        // Aktualizácia celkovej veľkosti komprimovaných dát
-        pthread_mutex_lock(&totalCompressedSizeLock);
-        totalCompressedSize += compressedSize;
-        pthread_mutex_unlock(&totalCompressedSizeLock);
-    }
-
-    pthread_exit(NULL);
-
-    return NULL;
+    return (void *) (intptr_t) byteCount;
 }
 
 int main() {
-    FILE *file;
-    char *filename = "/home/eddie/TUKE/PP/parallel-assignment-2/c8.raw";
+    uint8_t *voxels = readVoxelData("C:\\Users\\bobok\\CLionProjects\\parallel-assignment-2.v2\\c8.raw");
+    int len = X * Y * Z;
 
-    // Otvorenie súboru na čítanie binárnych dát
-    file = fopen(filename, "rb");
-    if (file == NULL) {
-        fprintf(stderr, "Nepodarilo sa otvoriť súbor %s\n", filename);
-        exit(1);
+    struct timeval start_time, end_time;
+    gettimeofday(&start_time, NULL);
+
+    int totalByteCount = 1;
+    pthread_t threads[NUM_THREADS];
+    struct ThreadData threadData[NUM_THREADS];
+
+    int chunkSize = len / NUM_THREADS;
+    int remainder = len % NUM_THREADS;
+
+    int i;
+    for (i = 0; i < NUM_THREADS; i++) {
+        threadData[i].voxels = voxels;
+        threadData[i].start = i * chunkSize;
+        threadData[i].end = (i == NUM_THREADS - 1) ? (i + 1) * chunkSize + remainder : (i + 1) * chunkSize;
+
+        pthread_create(&threads[i], NULL, processSubset, (void *) &threadData[i]);
     }
 
-    // Načítanie dát zo súboru
-    for (int x = 0; x < X_DIM * Y_DIM * Z_DIM; x++) {
-        uint8_t tmp;
-        fread(&tmp, sizeof(uint8_t), 1, file);
-        // Aplikácia prahovania
-        filedata[x] = (tmp > THRESHOLD) ? 1 : 0;
+    for (i = 0; i < NUM_THREADS; i++) {
+        void *result;
+        pthread_join(threads[i], &result);
+        totalByteCount += (int) (intptr_t) result;
     }
 
-    // Zatvorenie súboru
-    fclose(file);
+    gettimeofday(&end_time, NULL);
 
-    // Inicializácia a spustenie vlákien
-    struct ThreadArgs threadArgs[NUM_THREADS];
+    printf("Byte: %d\n", totalByteCount);
 
-    for (int i = 0; i < NUM_THREADS; i++) {
-        threadArgs[i].start = i * X_DIM * Y_DIM * Z_DIM / BLOCK_SIZE;
-        threadArgs[i].end = (i + 1) * X_DIM * Y_DIM * Z_DIM / BLOCK_SIZE;
-        pthread_create(&threads[i], NULL, processBlock, (void *)&threadArgs[i]);
-    }
+    long elapsed = (end_time.tv_sec - start_time.tv_sec) * 1000000 + end_time.tv_usec - start_time.tv_usec;
+    printf("Time: %ld ms\n", elapsed / 1000);
 
-    // Čakanie na ukončenie všetkých vlákien
-    for (int i = 0; i < NUM_THREADS; i++) {
-        pthread_join(threads[i], NULL);
-    }
-
-    printf("Celkova velkost komprimovanych dat pre vsetky datove bloky je %d bajtov\n", totalCompressedSize);
+    free(voxels);
 
     return 0;
 }

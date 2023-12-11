@@ -1,0 +1,3 @@
+"D:\Program Files\JetBrains\CLion 2023.2.2\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\mainC.dir/objects.a
+"D:\Program Files\JetBrains\CLion 2023.2.2\bin\mingw\bin\ar.exe" qc CMakeFiles\mainC.dir/objects.a @CMakeFiles\mainC.dir\objects1.rsp
+"D:\Program Files\JetBrains\CLion 2023.2.2\bin\mingw\bin\gcc.exe" -g -Wl,--whole-archive CMakeFiles\mainC.dir/objects.a -Wl,--no-whole-archive -o mainC.exe -Wl,--out-implib,libmainC.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\mainC.dir\linkLibs.rsp

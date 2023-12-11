@@ -13,7 +13,7 @@ uint8_t* readVoxelData(const char* filename) {
     }
 
     // Calculate the size of the volume
-    size_t volumeSize = WIDTH * HEIGHT * DEPTH;
+    size_t volumeSize = X * Y * Z;
 
     // Allocate memory to store the voxel data
     uint8_t* voxels = (uint8_t*)malloc(volumeSize * sizeof(uint8_t));
@@ -42,13 +42,13 @@ void freeVoxelData(uint8_t* voxels) {
 
 uint8_t getVoxelValue(const uint8_t* voxels, int x, int y, int z) {
     // Validate coordinates
-    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT || z < 0 || z >= DEPTH) {
+    if (x < 0 || x >= X || y < 0 || y >= Y || z < 0 || z >= Z) {
         fprintf(stderr, "Invalid voxel coordinates.\n");
         exit(1);
     }
 
     // Calculate the linear index for the given coordinates
-    size_t index = x + WIDTH * (y + HEIGHT * z);
+    size_t index = x + X * (y + Y * z);
 
     return voxels[index];
 }

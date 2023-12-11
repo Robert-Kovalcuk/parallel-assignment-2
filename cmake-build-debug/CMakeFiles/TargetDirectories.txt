@@ -1,5 +1,5 @@
-/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles/parallel_assignment_2.dir
-/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles/mainC.dir
-/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles/mainB.dir
-/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/eddie/TUKE/PP/parallel-assignment-2/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+C:/Users/bobok/CLionProjects/parallel-assignment-2.v2/cmake-build-debug/CMakeFiles/mainB.dir
+C:/Users/bobok/CLionProjects/parallel-assignment-2.v2/cmake-build-debug/CMakeFiles/mainC.dir
+C:/Users/bobok/CLionProjects/parallel-assignment-2.v2/cmake-build-debug/CMakeFiles/mainA.dir
+C:/Users/bobok/CLionProjects/parallel-assignment-2.v2/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/bobok/CLionProjects/parallel-assignment-2.v2/cmake-build-debug/CMakeFiles/rebuild_cache.dir

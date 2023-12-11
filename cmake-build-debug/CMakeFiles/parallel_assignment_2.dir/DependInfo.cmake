@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/eddie/TUKE/PP/parallel-assignment-2/common/fileLoadUtils.c" "CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.o" "gcc" "CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.o.d"
-  "/home/eddie/TUKE/PP/parallel-assignment-2/main.c" "CMakeFiles/parallel_assignment_2.dir/main.c.o" "gcc" "CMakeFiles/parallel_assignment_2.dir/main.c.o.d"
+  "C:/Users/bobok/CLionProjects/parallel-assignment-2.v2/common/fileLoadUtils.c" "CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.obj" "gcc" "CMakeFiles/parallel_assignment_2.dir/common/fileLoadUtils.c.obj.d"
+  "C:/Users/bobok/CLionProjects/parallel-assignment-2.v2/main.c" "CMakeFiles/parallel_assignment_2.dir/main.c.obj" "gcc" "CMakeFiles/parallel_assignment_2.dir/main.c.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

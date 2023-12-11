@@ -25,12 +25,12 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    uint8_t* voxels = NULL;
+    uint8_t *voxels = NULL;
     int len;
 
     if (rank == 0) {
         voxels = readVoxelData("/home/eddie/TUKE/PP/parallel-assignment-2/c8.raw");
-        len = WIDTH * HEIGHT * DEPTH;
+        len = X * Y * Z;
     }
 
     MPI_Bcast(&len, 1, MPI_INT, 0, MPI_COMM_WORLD);
@@ -38,9 +38,10 @@ int main() {
     int start = rank * len / size;
     int end = (rank + 1) * len / size;
 
-    uint8_t* subsetVoxels = (uint8_t*)malloc((end - start) * sizeof(uint8_t));
+    uint8_t *subsetVoxels = (uint8_t *) malloc((end - start) * sizeof(uint8_t));
 
-    MPI_Scatter(voxels, end - start, MPI_UNSIGNED_CHAR, subsetVoxels, end - start, MPI_UNSIGNED_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Scatter(voxels, end - start, MPI_UNSIGNED_CHAR, subsetVoxels, end - start, MPI_UNSIGNED_CHAR, 0,
+                MPI_COMM_WORLD);
 
     struct timeval start_time, end_time;
     gettimeofday(&start_time, NULL);
@@ -73,10 +74,10 @@ int main() {
     gettimeofday(&end_time, NULL);
 
     if (rank == 0) {
-        printf("\nTotal byte count: %d\n", globalByteCount);
+        printf("\nTime: %d\n", globalByteCount);
 
         long elapsed = (end_time.tv_sec - start_time.tv_sec) * 1000000 + end_time.tv_usec - start_time.tv_usec;
-        printf("Time elapsed: %ld ms\n", elapsed / 1000);
+        printf("Byte: %ld ms\n", elapsed / 1000);
     }
 
     free(subsetVoxels);
