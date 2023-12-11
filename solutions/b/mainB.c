@@ -48,25 +48,21 @@ void *processBlock(void *threadArgs) {
     int start = args->start;
     int end = args->end;
 
-    for (int z = 0; z < Z_DIM; z++) {
-        for (int y = 0; y < Y_DIM; y++) {
-            for (int x = start; x < end; x += BLOCK_SIZE) {
+    for (int x = start; x < end; x += BLOCK_SIZE) {
 
-                // Skopírovanie metadát do pomocného poľa
-                uint8_t compressedMetadata[BLOCK_SIZE];
-                for (int i = 0; i < BLOCK_SIZE; i++) {
-                    compressedMetadata[i] = filedata[x+y+z];
-                }
-
-                // Kompresia metadát pomocou bit-level RLE
-                int compressedSize = compressRLE(compressedMetadata, BLOCK_SIZE, compressedMetadata);
-
-                // Aktualizácia celkovej veľkosti komprimovaných dát
-                pthread_mutex_lock(&totalCompressedSizeLock);
-                totalCompressedSize += compressedSize;
-                pthread_mutex_unlock(&totalCompressedSizeLock);
-            }
+        // Skopírovanie metadát do pomocného poľa
+        uint8_t compressedMetadata[BLOCK_SIZE];
+        for (int i = 0; i < BLOCK_SIZE; i++) {
+            compressedMetadata[i] = filedata[x];
         }
+
+        // Kompresia metadát pomocou bit-level RLE
+        int compressedSize = compressRLE(compressedMetadata, BLOCK_SIZE, compressedMetadata);
+
+        // Aktualizácia celkovej veľkosti komprimovaných dát
+        pthread_mutex_lock(&totalCompressedSizeLock);
+        totalCompressedSize += compressedSize;
+        pthread_mutex_unlock(&totalCompressedSizeLock);
     }
 
     pthread_exit(NULL);
@@ -86,15 +82,11 @@ int main() {
     }
 
     // Načítanie dát zo súboru
-    for (int z = 0; z < Z_DIM; z++) {
-        for (int y = 0; y < Y_DIM; y++) {
-            for (int x = 0; x < X_DIM; x++) {
-                uint8_t tmp;
-                fread(&tmp, sizeof(uint8_t), 1, file);
-                // Aplikácia prahovania
-                filedata[x+y+z] = (tmp > THRESHOLD) ? 1 : 0;
-            }
-        }
+    for (int x = 0; x < X_DIM * Y_DIM * Z_DIM; x++) {
+        uint8_t tmp;
+        fread(&tmp, sizeof(uint8_t), 1, file);
+        // Aplikácia prahovania
+        filedata[x] = (tmp > THRESHOLD) ? 1 : 0;
     }
 
     // Zatvorenie súboru
@@ -103,20 +95,15 @@ int main() {
     // Inicializácia a spustenie vlákien
     struct ThreadArgs threadArgs[NUM_THREADS];
 
-    int j = 0;
+    for (int i = 0; i < NUM_THREADS; i++) {
+        threadArgs[i].start = i * X_DIM * Y_DIM * Z_DIM / BLOCK_SIZE;
+        threadArgs[i].end = (i + 1) * X_DIM * Y_DIM * Z_DIM / BLOCK_SIZE;
+        pthread_create(&threads[i], NULL, processBlock, (void *)&threadArgs[i]);
+    }
 
-    while(j < X_DIM * Y_DIM * Z_DIM) {
-        for (int i = 0; i < NUM_THREADS; i++) {
-            threadArgs[i].start = i * BLOCK_SIZE;
-            threadArgs[i].end = (i + 1) * BLOCK_SIZE;
-            pthread_create(&threads[i], NULL, processBlock, (void *)&threadArgs[i]);
-            j = j + BLOCK_SIZE;
-        }
-
-        // Čakanie na ukončenie všetkých vlákien
-        for (int i = 0; i < NUM_THREADS; i++) {
-            pthread_join(threads[i], NULL);
-        }
+    // Čakanie na ukončenie všetkých vlákien
+    for (int i = 0; i < NUM_THREADS; i++) {
+        pthread_join(threads[i], NULL);
     }
 
     printf("Celkova velkost komprimovanych dat pre vsetky datove bloky je %d bajtov\n", totalCompressedSize);
